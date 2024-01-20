@@ -101,8 +101,14 @@
   }
 
   li {
+    display: flex;
+    justify-content: space-between; /* Aligns content to start and end of the container */
     border: 1px solid #ddd;
     padding: 5px;
     margin: 2px;
+  }
+
+  .elo {
+    margin-left: auto; /* Pushes the element to the far right */
   }
 </style>

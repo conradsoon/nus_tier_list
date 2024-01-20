@@ -35,15 +35,32 @@
 </script>
 
 <Header />
-<div class="ranking-page">
-  {#each choices as choice (choice.id)}
-    <div class="box" on:click={() => selectChoice(choice)}>
-      {choice.name}
-    </div>
-  {/each}
+<div class="page-container">
+  <!-- Added a container div for centering -->
+  <h2 class="centered-heading">which is better?</h2>
+  <!-- Added centered-heading class -->
+  <div class="ranking-page">
+    {#each choices as choice (choice.id)}
+      <div class="box" on:click={() => selectChoice(choice)}>
+        {choice.name}
+      </div>
+    {/each}
+  </div>
 </div>
 
 <style>
+  /* Center the heading */
+  .centered-heading {
+    text-align: center;
+  }
+
+  /* Center the container div and its contents */
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   .ranking-page {
     display: flex;
     justify-content: center;
