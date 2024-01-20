@@ -6,7 +6,7 @@
   <!-- Resize the image to be 300px in width -->
   <img src="nustierlist.png" alt="Nustierlist Image" style="width: 300px;" />
   <!-- add a centred quote -->
-  <div>"bro"</div>
+  <div>"a good quote for the website"</div>
 
   <!-- Adding "Rank Stuff" and "Submit Stuff" links -->
   <div class="links">
