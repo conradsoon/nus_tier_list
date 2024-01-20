@@ -25,7 +25,7 @@ function getUniqueIds(comparisons) {
 function getExpectedScore(ra, rb) {
   qa = Math.pow(10, ra / 400);
   qb = Math.pow(10, rb / 400);
-  return qa / (qa + qb);
+  return Math.round(qa / (qa + qb));
 }
 
 function getUpdatedScore(ra, sa, ea) {
