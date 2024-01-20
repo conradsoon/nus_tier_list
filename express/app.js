@@ -7,8 +7,8 @@ const cors = require("cors"); // Import the cors middleware
 const cron = require("node-cron");
 var { processComparisons } = require("./ranking/ranking");
 
-// Schedule a task to run every 5 minutes
-cron.schedule("*/5 * * * *", () => {
+//rerank every 1 minute
+cron.schedule("*/1 * * * *", () => {
   processComparisons();
 });
 
