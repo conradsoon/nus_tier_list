@@ -25,6 +25,8 @@
     );
 
     if (response.ok) {
+      //wait for another 500ms
+      await new Promise((r) => setTimeout(r, 500));
       await fetchComparison(); // Wait for the fetchComparison to complete
     } else {
       console.error("Failed to send comparison.");
