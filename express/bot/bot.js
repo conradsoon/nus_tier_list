@@ -115,4 +115,33 @@ bot.command("rank", (ctx) => {
     });
 });
 
+// New command to process a list of items from a multi-line message
+bot.command("addMultipleThings", async (ctx) => {
+  // Split the message text into individual items (separated by new lines)
+  const items = ctx.message.text.split("\n").slice(1); // slice(1) to skip the command itself
+
+  // Process each item
+  for (const item of items) {
+    try {
+      if (item.trim().length > 0) {
+        // Check if the item is not just whitespace
+        const thing = new Thing(
+          0,
+          item,
+          null,
+          ctx.from.id,
+          ctx.from.username,
+          1000
+        );
+        await addThing(thing);
+        ctx.reply(`Added: ${item}`);
+      }
+    } catch (error) {
+      ctx.reply(`Error adding ${item}: ${error.message}`);
+    }
+  }
+
+  ctx.reply("All items processed.");
+});
+
 bot.launch();
