@@ -1,0 +1,37 @@
+# Node.js files
+node_modules/
+npm-debug.log
+
+# Compiled Svelte files
+public/build/
+
+# Environment variables
+.env
+
+# OS and Editor files
+.DS_Store
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+logs/
+*.log
+
+# Editor-specific files
+.idea/
+*.suo
+*.ntvs*
+
+# Dependency directories
+.pnpm-store/
+yarn-error.log
+yarn.lock
+package-lock.json
+.pnpm/
+
+# Optional: .env.local contains local development environment variables, include only if needed
+#.env.local
+
+tierlist.db
+images/*
