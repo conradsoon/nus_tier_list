@@ -1,30 +1,21 @@
 <script>
   import { onMount } from "svelte";
   import { Link } from "svelte-routing";
+  import Header from "./Header.svelte"; // Import the Header component
 
   let things = []; // Initialize an empty array for the items from the API
 
   // Fetch data from the API endpoint
   onMount(async () => {
-    const response = await fetch("http://localhost:4000/thing"); // Replace with your API endpoint URL
+    const response = await fetch(
+      "http://nustierlistv1.conradsoon.me:4000/thing"
+    ); // Replace with your API endpoint URL
     things = await response.json();
   });
 </script>
 
-<header>
-  <!-- Resize the image to be 300px in width -->
-  <img src="nustierlist.png" alt="Nustierlist Image" style="width: 300px;" />
-</header>
+<Header></Header>
 
-<!-- Adding "Rank Stuff" and "Submit Stuff" links -->
-<div class="links">
-  <Link to="/rank" class="blue-link" style="margin: 10px;"
-    ><b><i><u>rank things</u></i></b></Link
-  >
-  <Link to="/rank" class="blue-link" style="margin: 10px;"
-    ><b><i><u>submit things</u></i></b></Link
-  >
-</div>
 <main>
   <!-- Creating a tier list with tiers stacked on top of each other -->
   <div class="tier-list">
@@ -105,20 +96,5 @@
     border: 1px solid #ddd;
     padding: 5px;
     margin: 2px;
-  }
-
-  /* Styling for the links */
-  .links {
-    display: flex;
-    justify-content: center; /* Center the links horizontally */
-    margin-top: 20px;
-  }
-
-  .blue-link {
-    color: blue;
-    font-family: "Comic Sans MS", cursive;
-    text-decoration: none;
-    font-size: 1.2em;
-    margin: 10px; /* Add margin to space the links */
   }
 </style>

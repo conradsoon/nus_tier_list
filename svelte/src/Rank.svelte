@@ -1,9 +1,12 @@
 <script>
   import { onMount } from "svelte";
+  import Header from "./Header.svelte";
   let choices = [];
 
   async function fetchComparison() {
-    const response = await fetch("http://127.0.0.1:4000/comparison"); // Replace with your API endpoint URL
+    const response = await fetch(
+      "http://nustierlistv1.conradsoon.me:4000/comparison"
+    ); // Replace with your API endpoint URL
     choices = await response.json();
   }
 
@@ -15,7 +18,7 @@
   async function selectChoice(choice) {
     console.log("You selected:", choice.name);
     const response = await fetch(
-      `http://127.0.0.1:4000/comparison?id1=${choices[0].id}&id2=${choices[1].id}&better_id=${choice.id}`,
+      `http://nustierlistv1.conradsoon.me:4000/comparison?id1=${choices[0].id}&id2=${choices[1].id}&better_id=${choice.id}`,
       {
         method: "POST",
       }
@@ -29,6 +32,7 @@
   }
 </script>
 
+<Header />
 <div class="ranking-page">
   {#each choices as choice (choice.id)}
     <div class="box" on:click={() => selectChoice(choice)}>
@@ -40,21 +44,37 @@
 <style>
   .ranking-page {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    flex-wrap: wrap; /* Enable wrapping if the window is too small */
   }
 
   .box {
     width: 200px;
     height: 100px;
-    background-color: #ccc;
+    background-color: #4caf50; /* A cooler color */
+    background-image: linear-gradient(
+      to right,
+      #32a852,
+      #4caf50
+    ); /* Gradient background */
     margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px; /* Larger font size */
+    font-weight: bold; /* Bold font */
+    color: white; /* White text */
+    border: 2px solid transparent;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+  }
+
+  .box:hover {
+    background-color: #367c39; /* Darker shade on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
+    transform: translateY(-2px); /* Slight raise effect on hover */
   }
 </style>
