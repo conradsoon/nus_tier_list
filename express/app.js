@@ -4,6 +4,13 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors"); // Import the cors middleware
+const cron = require("node-cron");
+var { processComparisons } = require("./ranking/ranking");
+
+// Schedule a task to run every 5 minutes
+cron.schedule("*/5 * * * *", () => {
+  processComparisons();
+});
 
 // var indexRouter = require("./routes/index");
 // var usersRouter = require("./routes/users");
