@@ -2,7 +2,7 @@ const sqlite3 = require("sqlite3").verbose();
 const createThingsTable = `
     CREATE TABLE IF NOT EXISTS THINGS (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        image_location TEXT NOT NULL,
+        image_location TEXT,
         name TEXT NOT NULL,
         submitter_telegram_id TEXT NOT NULL,
         submitter_telegram_handle TEXT NOT NULL,
@@ -314,6 +314,39 @@ async function getRandomComparison() {
   });
 }
 
+async function getTopKThings(k) {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT * FROM THINGS
+      ORDER BY elo_ranking DESC
+      LIMIT ?
+    `;
+    db.all(query, [k], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        try {
+          const things = rows.map((row) => {
+            return new Thing(
+              row.id,
+              row.name,
+              row.image_location,
+              row.submitter_telegram_id,
+              row.submitter_telegram_handle,
+              row.elo_ranking,
+              row.approved
+            );
+          });
+
+          resolve(things);
+        } catch (error) {
+          reject(error);
+        }
+      }
+    });
+  });
+}
+
 module.exports = {
   db,
   Thing,
@@ -326,4 +359,5 @@ module.exports = {
   setProcessed,
   getRandomComparison,
   addThing,
+  getTopKThings,
 };

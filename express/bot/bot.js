@@ -1,10 +1,11 @@
 const { Telegraf, Scenes, session } = require("telegraf");
 const { Thing, Comparison } = require("../db/db");
 const { addThing, addComparison } = require("../db/db");
+const { processComparisons } = require("../ranking/ranking");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const bot = new Telegraf(""); // replace with your bot token
+const bot = new Telegraf(process.env.BOT_TOKEN); // replace with your bot token
 // Create a scene for submitting a name
 const nameScene = new Scenes.BaseScene("nameScene");
 // Ensure images directory exists
@@ -32,6 +33,19 @@ imageScene.on("text", (ctx) => {
   console.log(ctx.message.text);
   if (ctx.message.text.toLowerCase() === "/done") {
     // console.log(ctx.session.name);
+    const thing = new Thing(
+      0,
+      ctx.session.name,
+      null,
+      ctx.message.from.id,
+      ctx.message.from.username,
+      1000
+    );
+    console.log("text thing", thing);
+    addThing(thing).then(() => {
+      console.log("thing added");
+      ctx.reply("Submission received. Thank you!");
+    });
     return ctx.scene.leave();
   }
 });
@@ -90,6 +104,15 @@ bot.command("submitThing", (ctx) => {
   ctx.scene.enter("nameScene");
 });
 
-//utils
+bot.command("rank", (ctx) => {
+  //rank this shit
+  processComparisons()
+    .then(() => {
+      ctx.reply("nice");
+    })
+    .catch((err) => {
+      ctx.reply("bruh");
+    });
+});
 
 bot.launch();
