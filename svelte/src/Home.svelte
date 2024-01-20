@@ -1,38 +1,46 @@
 <script>
   import { onMount } from "svelte";
-  import { Link } from "svelte-routing";
   import Header from "./Header.svelte"; // Import the Header component
 
   let things = []; // Initialize an empty array for the items from the API
+  let tiers = { S: [], A: [], B: [], C: [], D: [], E: [], F: [], Unranked: [] }; // Object to hold tiers
 
   // Fetch data from the API endpoint
   onMount(async () => {
     const response = await fetch(
       "http://nustierlistv1.conradsoon.me:4000/thing"
-    ); // Replace with your API endpoint URL
+    );
     things = await response.json();
+
+    // Sort things by eloRanking in descending order
+    things.sort((a, b) => b.eloRanking - a.eloRanking);
+
+    // Divide sorted things into tiers
+    Object.keys(tiers).forEach((tier, index) => {
+      tiers[tier] = things.slice(index * 5, (index + 1) * 5);
+    });
   });
 </script>
 
 <Header></Header>
 
 <main>
-  <!-- Creating a tier list with tiers stacked on top of each other -->
   <div class="tier-list">
-    <div class="tier">
-      <div class="tier-header">S Tier</div>
-      <ul>
-        {#each things as thing}
-          <li>
-            <span>{thing.name}</span>
-            <!-- Display the item name -->
-            <span class="elo">{thing.eloRanking}</span>
-            <!-- Display the Elo ranking to the right -->
-          </li>
-        {/each}
-      </ul>
-    </div>
-    <!-- Add more tiers here -->
+    {#each Object.entries(tiers) as [tierName, tierThings]}
+      {#if tierThings.length > 0}
+        <div class="tier">
+          <div class="tier-header">{tierName} Tier</div>
+          <ul>
+            {#each tierThings as thing}
+              <li>
+                <span>{thing.name}</span>
+                <span class="elo">{thing.eloRanking}</span>
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
+    {/each}
   </div>
 </main>
 
