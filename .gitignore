@@ -33,5 +33,5 @@ package-lock.json
 # Optional: .env.local contains local development environment variables, include only if needed
 #.env.local
 
-tierlist.db
-images/*
+express/tierlist.db
+express/images/*
