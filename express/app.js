@@ -31,7 +31,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // Enable CORS for a specific origin (replace 'http://localhost:3000' with your Svelte app's origin)
 app.use(
   cors({
-    origin: "http://nustierlistv1.conradsoon.me", // Replace with your Svelte app's origin
+    origin: "*", // Allow all origins
+    // origin: "http://nustierlistv1.conradsoon.me", // Replace with your Svelte app's origin
     credentials: true, // Enable sending cookies and other credentials
   })
 );
