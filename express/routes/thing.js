@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var { processComparisons } = require("../ranking/ranking");
+var { getTopKThings } = require("../db/db");
 
 /* POST comparison */
 // router.get("/", function (req, res,next) {
@@ -21,7 +22,14 @@ var { processComparisons } = require("../ranking/ranking");
 // });
 
 router.get("/", function (req, res, next) {
-  //get things
-  
-}
+  getTopKThings(50)
+    .then((things) => {
+      res.status(200).send(things);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("Error getting top things");
+    });
+});
+
 module.exports = router;
