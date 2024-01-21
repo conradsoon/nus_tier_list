@@ -7,6 +7,7 @@ const createThingsTable = `
         submitter_telegram_id TEXT NOT NULL,
         submitter_telegram_handle TEXT NOT NULL,
         elo_ranking INTEGER NOT NULL,
+        old_elo_ranking INTEGER,
         approved BOOLEAN NOT NULL DEFAULT FALSE
     )
 `;
@@ -42,6 +43,7 @@ class Thing {
     this.imageLocation = imageLocation;
     this.submitterTelegramId = submitterTelegramId;
     this.submitterTelegramHandle = submitterTelegramHandle;
+    this.oldEloRanking = eloRanking;
     this.eloRanking = eloRanking;
     this.approved = false;
   }
@@ -196,12 +198,12 @@ async function updateEloRankings(things) {
       things.forEach((thing) => {
         const updateStatement = `
                     UPDATE THINGS
-                    SET elo_ranking = ?
+                    SET elo_ranking = ?, old_elo_ranking = ?
                     WHERE id = ?
                 `;
         updateStatements.push({
           sql: updateStatement,
-          params: [thing.eloRanking, thing.id],
+          params: [thing.eloRanking, thing.oldEloRanking, thing.id],
         });
       });
       db.serialize(() => {
@@ -248,8 +250,8 @@ async function addComparison(comparison) {
 async function addThing(thing) {
   return new Promise((resolve, reject) => {
     const query = `
-			INSERT INTO THINGS (name, image_location, submitter_telegram_id, submitter_telegram_handle, elo_ranking)
-			VALUES (?,?, ?, ?, ?)
+			INSERT INTO THINGS (name, image_location, submitter_telegram_id, submitter_telegram_handle, elo_ranking, old_elo_ranking)
+			VALUES (?,?, ?, ?, ?, ?)
 		`;
     db.run(
       query,
@@ -259,6 +261,7 @@ async function addThing(thing) {
         thing.submitterTelegramId,
         thing.submitterTelegramHandle,
         thing.eloRanking,
+        thing.oldEloRanking,
       ],
       (err) => {
         if (err) {
@@ -327,7 +330,7 @@ async function getTopKThings(k) {
       } else {
         try {
           const things = rows.map((row) => {
-            return new Thing(
+            t = new Thing(
               row.id,
               row.name,
               row.image_location,
@@ -336,6 +339,8 @@ async function getTopKThings(k) {
               row.elo_ranking,
               row.approved
             );
+            t.oldEloRanking = row.old_elo_ranking;
+            return t;
           });
 
           resolve(things);
