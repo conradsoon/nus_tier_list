@@ -6,7 +6,7 @@
   let tiers = { S: [], A: [], B: [], C: [], D: [], E: [], F: [], Unranked: [] }; // Object to hold tiers
 
   // Fetch data from the API endpoint
-  onMount(async () => {
+  const fetchData = async () => {
     const response = await fetch(
       "http://nustierlistv1.conradsoon.me:4000/thing"
     );
@@ -19,7 +19,19 @@
     Object.keys(tiers).forEach((tier, index) => {
       tiers[tier] = things.slice(index * 5, (index + 1) * 5);
     });
-  });
+  };
+  const calculateArrow = (newElo, oldElo) => {
+    const change = newElo - oldElo;
+    if (change > 20) {
+      return { arrow: "↑", class: "up-arrow" };
+    } else if (change < -20) {
+      return { arrow: "↓", class: "down-arrow" };
+    } else {
+      return { arrow: "~", class: "mid-error" };
+    }
+  };
+  const interval = setInterval(fetchData, 5000);
+  onMount(fetchData());
 </script>
 
 <Header></Header>
@@ -34,7 +46,17 @@
             {#each tierThings as thing}
               <li>
                 <span>{thing.name}</span>
-                <span class="elo">{thing.eloRanking}</span>
+                <span class="elo">{Math.round(thing.eloRanking)}</span>
+                {#if thing.oldEloRanking !== undefined}
+                  <span
+                    class={calculateArrow(thing.eloRanking, thing.oldEloRanking)
+                      .class}
+                  >
+                    {calculateArrow(thing.eloRanking, thing.oldEloRanking)
+                      .arrow}
+                    {Math.round(thing.oldEloRanking)}
+                  </span>
+                {/if}
               </li>
             {/each}
           </ul>
@@ -110,5 +132,17 @@
 
   .elo {
     margin-left: auto; /* Pushes the element to the far right */
+  }
+
+  .up-arrow {
+    color: green;
+  }
+
+  .down-arrow {
+    color: red;
+  }
+
+  .mid-error {
+    color: orange;
   }
 </style>
